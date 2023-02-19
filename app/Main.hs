@@ -24,27 +24,24 @@ performExecution cmd args = do
       Nothing -> return $ ExitFailure maxBound
 
 runWithArgs :: [String] -> IO (String, ExitCode)
-runWithArgs [] = return ("", ExitSuccess)
+runWithArgs [] = getInsult $ ExitFailure maxBound
 runWithArgs (x:xs) = performExecution x xs >>= getInsult
 
 main :: IO ()
 main = do
     args <- getArgs
-    if null args
-       then do
+    resultCode <- try (runWithArgs args) :: IO (Either SomeException (String, ExitCode))
+    case resultCode of
+        Right (msg, code) -> case code of
+                                ExitSuccess -> return ()
+                                ExitFailure _ -> do
+                                    putStrLn msg 
+                                    exitWith code
+        Left x -> do
+            print x
             insult <- getInsult $ ExitFailure maxBound
             putStrLn $ fst insult
-       else do
-            resultCode <- try (runWithArgs args) :: IO (Either SomeException (String, ExitCode))
-            case resultCode of
-                Right (msg, code) -> case code of
-                                        ExitSuccess -> return ()
-                                        ExitFailure _ -> do
-                                            putStrLn msg 
-                                            exitWith code
-                Left x -> do
-                    print x
-                    exitWith $ ExitFailure maxBound
+            exitWith $ ExitFailure maxBound
 
 
 getAllInsults :: [String]
