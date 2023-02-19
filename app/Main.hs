@@ -25,25 +25,26 @@ performExecution cmd args = do
 
 runWithArgs :: [String] -> IO (String, ExitCode)
 runWithArgs [] = return ("", ExitSuccess)
-runWithArgs (x:xs) = do
-    code <- performExecution x xs
-    getInsult code
+runWithArgs (x:xs) = performExecution x xs >>= getInsult
 
 main :: IO ()
 main = do
     args <- getArgs
-    resultCode <- try (runWithArgs args) :: IO (Either SomeException (String, ExitCode))
-    case resultCode of
-      Right (msg, code) -> case code of
-                             ExitSuccess -> return ()
-                             ExitFailure _ -> do
-                                 putStrLn msg 
-                                 exitWith code
-      Left x -> do
-          print x
-          exitWith $ ExitFailure maxBound
-
-
+    if null args
+       then do
+            insult <- getInsult $ ExitFailure maxBound
+            putStrLn $ fst insult
+       else do
+            resultCode <- try (runWithArgs args) :: IO (Either SomeException (String, ExitCode))
+            case resultCode of
+                Right (msg, code) -> case code of
+                                        ExitSuccess -> return ()
+                                        ExitFailure _ -> do
+                                            putStrLn msg 
+                                            exitWith code
+                Left x -> do
+                    print x
+                    exitWith $ ExitFailure maxBound
 
 
 getAllInsults :: [String]
@@ -524,4 +525,5 @@ getAllInsults = ["Let me tell you. If I don’t answer you the first time, what 
                  "I can only please one person a day. Today isn’t your day. Tomorrow isn’t looking good either.",
                  "My alone time is meant for your safety.",
                  "I desire that we be better strangers.",
-                 "In order to insult me, I must first value your opinion. Nice try though."]
+                 "In order to insult me, I must first value your opinion. Nice try though."
+ ]
