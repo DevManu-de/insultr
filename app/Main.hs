@@ -1,5 +1,6 @@
 module Main (main) where
 
+import Control.Exception
 import System.Environment
 import System.Exit
 import System.Process
@@ -31,12 +32,16 @@ runWithArgs (x:xs) = do
 main :: IO ()
 main = do
     args <- getArgs
-    code <- runWithArgs args
-    case snd code of
-      ExitSuccess -> return ()
-      ExitFailure _ -> do
-            putStrLn $ fst code
-            exitWith $ snd code
+    resultCode <- try (runWithArgs args) :: IO (Either SomeException (String, ExitCode))
+    case resultCode of
+      Right (msg, code) -> case code of
+                             ExitSuccess -> return ()
+                             ExitFailure _ -> do
+                                 putStrLn msg 
+                                 exitWith code
+      Left x -> do
+          print x
+          exitWith $ ExitFailure maxBound
 
 
 
