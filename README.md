@@ -1,7 +1,9 @@
 # insultr
 
-Who doesnt want to have a command that insults you when it fails.
-insultr is the solution to that problem.
+Did you ever think that it would be great if your computer insulted you when you
+execute a command and it fails.
+
+This is the solution!
 
 ## Usage
 
@@ -12,7 +14,7 @@ insultr is the solution to that problem.
 ### Successful command
 
 ``` bash
-insultr cat Setup.hs
+$ insultr cat Setup.hs
 import Distribution.Simple
 main = defaultMain
 ```
@@ -20,7 +22,7 @@ main = defaultMain
 ### Unsuccessful command
 
 ``` bash
-insultr cat Setu
+$ insultr cat Setu
 cat: Setu: No such file or directory
 I would slap you but sh*t splatters, and that would be too much of a mess.
 ```
@@ -32,4 +34,4 @@ To install make sure you have stack installed and then run
 
 ## Tips and tricks
 
-Also works with alias ;)
+Works great with alias ;)
