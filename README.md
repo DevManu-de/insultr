@@ -37,3 +37,7 @@ To install make sure you have stack installed and then run
 ## Tips and tricks
 
 Works great with alias ;)
+
+## Credits
+
+The insult list is from [https://github.com/Itz-fork/Nexa-API/tree/main/api/data]
