@@ -40,4 +40,4 @@ Works great with alias ;)
 
 ## Credits
 
-The insult list is from [insults](https://github.com/Itz-fork/Nexa-API/tree/main/api/data)
+The insult list is from [insults_list.json](https://github.com/Itz-fork/Nexa-API/blob/main/api/data/insults_list.json)
