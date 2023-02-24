@@ -9,6 +9,8 @@ This is the solution!
 
 `insultr <any command> <arguments for any command>`
 
+When a process exits with an error code an insult will arise otherwise not.
+
 ## Examples
 
 ### Successful command
@@ -24,7 +26,7 @@ main = defaultMain
 ``` bash
 $ insultr cat Setu
 cat: Setu: No such file or directory
-I would slap you but sh*t splatters, and that would be too much of a mess.
+It’s okay if you disagree with me. I can’t force you to be right.
 ```
 
 ## Installation
