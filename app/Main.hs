@@ -7,21 +7,13 @@ import System.Process
 import System.Random
 
 getInsult :: ExitCode -> IO (String, ExitCode)
-getInsult code = 
-    case code of
-      ExitSuccess -> return ("", code)
-      ExitFailure _ -> do
+getInsult code@ExitSuccess = return ("", code)
+getInsult code@(ExitFailure _) = do
           rnd <- randomRIO (0, length getAllInsults - 1)
           return (getAllInsults !! rnd, code)
 
 performExecution :: String -> [String] -> IO ExitCode
-performExecution cmd args = do
-    process <- spawnProcess cmd args
-    _ <- waitForProcess process
-    code <- getProcessExitCode process
-    case code of
-      Just x -> return x
-      Nothing -> return $ ExitFailure maxBound
+performExecution cmd args = spawnProcess cmd args >>= waitForProcess
 
 runWithArgs :: [String] -> IO (String, ExitCode)
 runWithArgs [] = getInsult $ ExitFailure maxBound
@@ -39,8 +31,8 @@ main = do
                                     exitWith code
         Left x -> do
             print x
-            insult <- getInsult $ ExitFailure maxBound
-            putStrLn $ fst insult
+            (insult, _) <- getInsult $ ExitFailure maxBound
+            putStrLn insult
             exitWith $ ExitFailure maxBound
 
 
