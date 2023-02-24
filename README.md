@@ -15,7 +15,7 @@ When a process exits with an error code an insult will arise otherwise not.
 
 ### Successful command
 
-``` bash
+``` text
 $ insultr cat Setup.hs
 import Distribution.Simple
 main = defaultMain
@@ -23,7 +23,7 @@ main = defaultMain
 
 ### Unsuccessful command
 
-``` bash
+``` text
 $ insultr cat Setu
 cat: Setu: No such file or directory
 It’s okay if you disagree with me. I can’t force you to be right.
