@@ -9,8 +9,8 @@ import System.Random
 getInsult :: ExitCode -> IO (String, ExitCode)
 getInsult code@ExitSuccess = return ("", code)
 getInsult code@(ExitFailure _) = do
-          rnd <- randomRIO (0, length getAllInsults - 1)
-          return (getAllInsults !! rnd, code)
+    rnd <- randomRIO (0, length getAllInsults - 1)
+    return (getAllInsults !! rnd, code)
 
 performExecution :: String -> [String] -> IO ExitCode
 performExecution cmd args = spawnProcess cmd args >>= waitForProcess
@@ -21,19 +21,18 @@ runWithArgs (x:xs) = performExecution x xs >>= getInsult
 
 main :: IO ()
 main = do
-    args <- getArgs
-    resultCode <- try (runWithArgs args) :: IO (Either SomeException (String, ExitCode))
+    resultCode <- try (getArgs >>= runWithArgs) :: IO (Either SomeException (String, ExitCode))
     case resultCode of
-        Right (msg, code) -> case code of
-                                ExitSuccess -> return ()
-                                ExitFailure _ -> do
-                                    putStrLn msg 
-                                    exitWith code
-        Left x -> do
-            print x
-            (insult, _) <- getInsult $ ExitFailure maxBound
+        Right (_, ExitSuccess) -> return ()
+        Right (msg, code@(ExitFailure _)) -> do
+            putStrLn msg
+            exitWith code
+
+        Left err -> do
+            print err
+            (insult, code) <- getInsult $ ExitFailure maxBound
             putStrLn insult
-            exitWith $ ExitFailure maxBound
+            exitWith code
 
 
 getAllInsults :: [String]
